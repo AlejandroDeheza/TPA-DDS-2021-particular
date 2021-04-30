@@ -2,7 +2,20 @@
 
 ## Diagrama de clases
 
+<p align="center"> 
+<img src="entrega1.png">
+</p>
+
 ## Explicacion
+
+* Para poder representar a las caracteristicas de las mascotas se eligio una lista de la clase 
+  "Caracacteristica". La idea es que englobe un tipo, asi toda clase que herede de Caracteristica 
+  pueda meterse en esa lista. Al momento de instanciar una Mascota, el administrador podría dejar 
+  predefinido que elementos van a componer esa lista. Luego podría modificarla.
+  
+
+* Para representar fotos en el sistema, usamos la clase "Foto", aunque no sabemos si es correcto.
+
 
 ## Pseudocódigo
 
@@ -17,9 +30,9 @@ class Persona{
     String email;
     
     Persona(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento, 
-    Integer numeroDocumento, Integer telefono, String email){
+    Long numeroDocumento, Integer telefono, String email){
         
-        Persona.validarPersona(nombre, apellido, telefono, email);
+        this.validarPersona(nombre, apellido, telefono, email);
         
         this.nombre = nombre;
         this.apellido = apellido;
@@ -30,7 +43,7 @@ class Persona{
         this.email = email;
     }
     
-    public static void validarPersona(String nombre, String apellido, Integer telefono, String email){
+    public void validarPersona(String nombre, String apellido, Integer telefono, String email){
         if((nombre == null || apellido == null) && telefono == null && email == null){
             throw new PersonaInvalidaException("Debe ingresar como minimo <nombre y apellido>, <telefono> o <email>");
         }
@@ -40,8 +53,8 @@ class Persona{
 class DuenioMascota extends Persona{
     List<Mascota> mascotas;
     
-    DueñoMascotas(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento, 
-    Integer numeroDocumento, List<Mascota> mascotas, Integer telefono, String email){
+    DuenioMascota(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento, 
+    Long numeroDocumento, List<Mascota> mascotas, Integer telefono, String email){
         
         Super();
         this.mascotas = mascotas;
@@ -52,7 +65,7 @@ class Rescatista extends Persona{
     String direccion; 
     
     Rescatista(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento, 
-    Integer numeroDocumento, String direccion, Integer telefono, String email){
+    Long numeroDocumento, String direccion, Integer telefono, String email){
         
         Super();
         this.direccion = direccion;
@@ -64,7 +77,7 @@ enum TipoDocumento{
 }
 
 class Mascota{
-    TipoMacota tipoMascota      //permite agregar mas tipos a futuro. un loro por ejemplo?
+    TipoMascota tipoMascota      //permite agregar mas tipos a futuro. un loro por ejemplo?
     String nombre
     String apodo
     Integer edadAproximada
@@ -75,7 +88,7 @@ class Mascota{
                                             //decidir que Caracteristicas poner en la lista antes de pasar la lista 
                                             //por el constructor de Mascota
     
-    Mascota(TipoMacota tipoMascota, String nombre, String apodo, Integer edadAproximada, Bool esMacho, 
+    Mascota(TipoMascota tipoMascota, String nombre, String apodo, Integer edadAproximada, Bool esMacho, 
     String descripcionFisica, List<Foto> fotos, List<Caracteristica> caracteristicas){
         this.tipoMascota = tipoMascota;
         this.nombre = nombre; 
@@ -94,20 +107,21 @@ class MascotaEncontrada{
     Ubicacion ubicacion         //buscar como se comunican apis de mapas
     LocalDate fechaEncuentro
     
-    MascotaEncontrada(List<Foto> fotos, String descripcionEstado, Ubicacion ubicacion){
+    MascotaEncontrada(List<Foto> fotos, String descripcionEstadoActual, Ubicacion ubicacion){
     
         if(fotos == null || fotos.isEmpty()){
             throw new MascotaEncontradaInvalidaException("Falta ingresar al menos una foto de la mascota encontrada");
         }
         this.fotos = fotos;
-        this.descripcionEstado = descripcionEstado;
+        this.descripcionEstadoActual = descripcionEstadoActual;
         this.ubicacion = ubicacion;
     }
 }
 
 enum TipoMascota{
     GATO, PERRO
-}// esto permite agregar facilmente otro tipo de mascota
+    // esto permite agregar facilmente otro tipo de mascota
+}
 
 class Foto{
     //tiene sentido esta clase ??
@@ -125,7 +139,7 @@ class ColorSecundario extends Caracteristica{
     Color color
 }
 
-class Castrado extends Caracteristica{
+class Castracion extends Caracteristica{
     Bool estaCastrado
 }
 
@@ -142,18 +156,20 @@ class Ubicacion{
 
 
 //////////// 4to requerimiento -> Metodo magico
-List<MascotaEncontrada> mascotasEncontradas;
+class RepositorioMascotasEncontradas{
 
-List<MascotaEncontrada> ListarMascotasEncontradasEnUltimosDias(Integer dias){
-    return this.mascotasEncontradas.filter(
-    mascota -> mascota.getFechaEncuentro().isAfter(LocalDate.now().minusDays(dias))
-    )
+    List<MascotaEncontrada> mascotasEncontradas;
+    
+    List<MascotaEncontrada> ListarMascotasEncontradasEnUltimosDias(Integer dias){
+        return this.mascotasEncontradas.filter(
+        mascota -> mascota.getFechaEncuentro().isAfter(LocalDate.now().minusDays(dias))
+        )
+    }
+    
+    List<MascotaEncontrada> ListarMascotasEncontradasEnUltimos10Dias(){
+        return ListarMascotasEncontradasEnUltimosDias(10);
+    }
 }
-
-List<MascotaEncontrada> ListarMascotasEncontradasEnUltimos10Dias(){
-    return ListarMascotasEncontradasEnUltimosDias(10);
-}
-
 
 
 ////////// Requerimientos de seguridad
@@ -164,7 +180,7 @@ abstract class Usuario{
     
     Usuario(String usuario, String contrasenia){
     
-        Usuario.validarContrasenia(contrasenia);
+        this.validarContrasenia(contrasenia);
         this.usuario = usuario;
         this.contrasenia = contrasenia;
     }
@@ -175,7 +191,7 @@ abstract class Usuario{
     }
 }
 
-class UsuarioDuenio extends Usuario{
+class UsuarioDuenioMascota extends Usuario{
     DuenioMascota duenioMascota
     
     UsuarioDuenio(String usuario, String contrasenia, DuenioMascota duenioMascota){
@@ -203,10 +219,10 @@ class ValidadorContraseniasComunes{
 			}
 		} catch (FileNotFoundException e) {
 			throw new ArchivoException(
-				"Algo salio mal al usar consumirArchivo() en clase ValidadorContraseniasComunes", e);
+				"Algo salio mal al usar validar() en clase ValidadorContraseniasComunes", e);
 		} catch (IOException e) {
 			throw new ArchivoException(
-				"Algo salio mal al usar consumirArchivo() en clase ValidadorContraseniasComunes", e);
+				"Algo salio mal al usar validar() en clase ValidadorContraseniasComunes", e);
 		}finally{
             try{                    
                 if(archivoContrasenias != null){   
@@ -214,7 +230,7 @@ class ValidadorContraseniasComunes{
                 }                  
             }catch (Exception e){ 
                 throw new ArchivoException(
-				    "Algo salio mal al cerrar archivo en consumirArchivo() en clase ValidadorContraseniasComunes", e);
+				    "Algo salio mal al cerrar archivo en validar() en clase ValidadorContraseniasComunes", e);
             }
         }
 	}
@@ -225,7 +241,7 @@ class ValidadorContraseniasComunes{
 //podemos validar:
 //minimo 8 caracteres
 //usar salt(32 bits de longitud minimo) y hash
-//etc...es copiar y pegar
+//etc...
 
 ~~~
 

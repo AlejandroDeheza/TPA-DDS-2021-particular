@@ -1,0 +1,94 @@
+@startuml
+class dominio.Persona {
+~ String nombre
+~ String apellido
+~ LocalDate fechaNacimiento
+~ Long numeroDocumento
+~ Integer telefono
+~ String email
++ void validarPersona(String,String,Integer,String)
+}
+class dominio.DuenioMascota {
+}
+class dominio.Rescatista {
+~ String direccion
+}
+class dominio.Mascota {
+~ String nombre
+~ String apodo
+~ Integer edadAproximada
+~ Boolean esMacho
+~ String descripcionFisica
+}
+class dominio.MascotaEncontrada {
+~ String descripcionEstadoActual
+~ LocalDate fechaEncuentro
+}
+class dominio.Foto {
+}
+class dominio.Caracteristica {
+}
+class dominio.ColorPrincipal {
+}
+class dominio.ColorSecundario {
+}
+class dominio.Castracion {
+~ Boolean estaCastrado
+}
+class dominio.Color {
+~ Integer rojo
+~ Integer verde
+~ Integer azul
+}
+class dominio.Ubicacion {
+}
+class dominio.RepositorioMascotasEncontradas {
++ List<MascotaEncontrada> ListarMascotasEncontradasEnUltimos10Dias()
+}
+abstract class dominio.Usuario {
+~ String usuario
+~ String contrasenia
++ void validarContrasenia(String)
+}
+class dominio.UsuarioDuenioMascota {
+}
+class dominio.UsuarioAdministrador {
+}
+class dominio.ValidadorContraseniasComunes {
+- BufferedReader archivoContrasenias
++ void validar(String)
+}
+
+enum dominio.TipoDocumento{
+DNI
+LC
+LE
+CI
+}
+enum dominio.TipoMascota{
+PERRO
+GATO
+}
+
+
+dominio.Persona <|-- dominio.Rescatista
+dominio.Caracteristica <|-- dominio.Castracion
+dominio.Caracteristica <|-- dominio.ColorSecundario
+dominio.Usuario <|-- dominio.UsuarioDuenioMascota
+dominio.Persona <|-- dominio.DuenioMascota
+dominio.Usuario <|-- dominio.UsuarioAdministrador
+dominio.Caracteristica <|-- dominio.ColorPrincipal
+dominio.TipoDocumento <-- dominio.Persona: tipoDocumento
+dominio.Mascota "*" <-- dominio.DuenioMascota: mascotas
+dominio.TipoMascota <-- dominio.Mascota: tipoMascota
+dominio.Foto "*" <-- dominio.Mascota: fotos
+dominio.Caracteristica "*" <-- dominio.Mascota: caracteristicas
+dominio.Foto "*" <-- dominio.MascotaEncontrada: fotos
+dominio.Ubicacion <-- dominio.MascotaEncontrada: ubicacion
+dominio.Color <-- dominio.ColorPrincipal: color
+dominio.Color <-- dominio.ColorSecundario: color
+dominio.DuenioMascota <-- dominio.UsuarioDuenioMascota: duenioMascota
+dominio.ValidadorContraseniasComunes <.. dominio.Usuario
+dominio.MascotaEncontrada "*" <-- dominio.RepositorioMascotasEncontradas: mascotasEncontradas
+
+@enduml
