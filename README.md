@@ -9,7 +9,7 @@
 ## Explicacion
 
 * Para poder representar a las caracteristicas de las mascotas se eligio una lista de la clase abstracta
-  "Caracacteristica". La idea es que englobe un tipo, asi toda clase que herede de Caracteristica 
+  "Caracteristica". La idea es que englobe un tipo, asi toda clase que herede de Caracteristica 
   pueda meterse en esa lista. 
   Al momento de instanciar una Mascota, el administrador podría dejar 
   predefinido que elementos van a componer esa lista. Luego podría modificarla.
