@@ -1,5 +1,5 @@
 package dominio;
 
 public enum TipoDocumento {
-  DNI, LC, LE, CI
+  DNI, LC, LE, CI, PASAPORTE
 }

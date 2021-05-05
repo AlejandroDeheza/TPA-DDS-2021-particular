@@ -1,4 +1,4 @@
 package dominio;
 
-public class Caracteristica {
+public abstract class Caracteristica {
 }

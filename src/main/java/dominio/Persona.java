@@ -10,12 +10,12 @@ public class Persona {
   private String apellido;
   private LocalDate fechaNacimiento;
   private TipoDocumento tipoDocumento;
-  private Long numeroDocumento;   //Alcanza con Integer?
+  private String numeroDocumento;
   private Integer telefono;
   private String email;
 
   public Persona(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento,
-          Long numeroDocumento, Integer telefono, String email){
+                 String numeroDocumento, Integer telefono, String email){
 
     this.validarPersona(nombre, apellido, telefono, email);
 
@@ -28,9 +28,10 @@ public class Persona {
     this.email = email;
   }
 
-  public void validarPersona(String nombre, String apellido, Integer telefono, String email){
+  private void validarPersona(String nombre, String apellido, Integer telefono, String email){
     if((nombre == null || apellido == null) && telefono == null && email == null){
-      throw new PersonaInvalidaException("Debe ingresar como minimo <nombre y apellido>, <telefono> o <email>");
+      throw new PersonaInvalidaException(
+          "Debe ingresar como minimo uno de los siguientes campos: <nombre y apellido>, <telefono> o <email>");
     }
   }
 }

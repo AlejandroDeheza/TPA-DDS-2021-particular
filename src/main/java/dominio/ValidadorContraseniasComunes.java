@@ -3,32 +3,38 @@ package dominio;
 import excepciones.ArchivoException;
 import excepciones.ContraseniaInvalidaException;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 
-public class ValidadorContraseniasComunes {
+public class ValidadorContraseniasComunes implements Validador {
 
   private BufferedReader archivoContrasenias;
 
+  @Override
   public void validar(String contrasenia) {
     try {
-      this.archivoContrasenias = new BufferedReader(new FileReader("archivos/10k-most-common.txt"));
+      this.archivoContrasenias = new BufferedReader(new InputStreamReader(
+          new FileInputStream("src/main/java/archivos/10k-most-common.txt"), "UTF-8"));
+
       for (int i = 1; i <= 10000; i++) {
-        if (this.archivoContrasenias.readLine().contentEquals(contrasenia)){
+        if (this.archivoContrasenias.readLine().contentEquals(contrasenia)) {
           throw new ContraseniaInvalidaException("Es una de las 10.000 contraseñas mas usadas");
         }
       }
-    }catch (Exception e) {
+    } catch (FileNotFoundException e) {
       throw new ArchivoException(
           "Algo salio mal al usar validar() en clase ValidadorContraseniasComunes", e);
-    }finally{
-      try{
-        if(this.archivoContrasenias != null){
+    } catch (IOException e) {
+      throw new ArchivoException(
+          "Algo salio mal al usar validar() en clase ValidadorContraseniasComunes", e);
+    } finally {
+      try {
+        if (this.archivoContrasenias != null) {
           this.archivoContrasenias.close();
         }
-      }catch (Exception e){
+      } catch (Exception e) {
         throw new ArchivoException(
-            "Algo salio mal al cerrar archivo en validar() en clase ValidadorContraseniasComunes", e);
+            "Algo salio mal al cerrar archivo en validar() en clase ValidadorContraseniasComunes",
+            e);
       }
     }
   }

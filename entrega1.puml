@@ -1,62 +1,73 @@
 @startuml
 class dominio.Persona {
-~ String nombre
-~ String apellido
-~ LocalDate fechaNacimiento
-~ Long numeroDocumento
-~ Integer telefono
-~ String email
-+ void validarPersona(String,String,Integer,String)
+- String nombre
+- String apellido
+- LocalDate fechaNacimiento
+- String numeroDocumento
+- Integer telefono
+- String email
+- void validarPersona(String,String,Integer,String)
 }
-class dominio.DuenioMascota {
+class mascota.Mascota {
+- String nombre
+- String apodo
+- LocalDate fechaDeNacimientoAproximada
+- Boolean esMacho
+- String descripcionFisica
 }
-class dominio.Rescatista {
-~ String direccion
+class mascota.RepositorioCaracteristicas {
 }
-class dominio.Mascota {
-~ String nombre
-~ String apodo
-~ Integer edadAproximada
-~ Boolean esMacho
-~ String descripcionFisica
+class mascota.InformeMascotaEncontrada {
+- String descripcionEstadoActual
+- String direccionRescatista
+- LocalDate fechaEncuentro
+- void validarInforme(List<Foto> fotos)
 }
-class dominio.MascotaEncontrada {
-~ String descripcionEstadoActual
-~ LocalDate fechaEncuentro
+class mascota.Foto {
 }
-class dominio.Foto {
+abstract class mascota.Caracteristica {
 }
-class dominio.Caracteristica {
+class mascota.ColorPrincipal {
 }
-class dominio.ColorPrincipal {
+class mascota.ColorSecundario {
 }
-class dominio.ColorSecundario {
+class mascota.Castracion {
+- Boolean estaCastrado
 }
-class dominio.Castracion {
-~ Boolean estaCastrado
+class mascota.Color {
+- Integer rojo
+- Integer verde
+- Integer azul
 }
-class dominio.Color {
-~ Integer rojo
-~ Integer verde
-~ Integer azul
+class mascota.Ubicacion {
 }
-class dominio.Ubicacion {
-}
-class dominio.RepositorioMascotasEncontradas {
+class mascota.RepositorioInformesMascotasEncontradas {
 + List<MascotaEncontrada> ListarMascotasEncontradasEnUltimos10Dias()
 }
 abstract class dominio.Usuario {
-~ String usuario
-~ String contrasenia
-+ void validarContrasenia(String)
+- String usuario
+- String contrasenia
+- void validarContrasenia(String contrasenia)
 }
-class dominio.UsuarioDuenioMascota {
+class dominio.DuenioMascota {
 }
-class dominio.UsuarioAdministrador {
+class dominio.Administrador {
+}
+class dominio.Voluntario {
+
+}
+class dominio.ValidadorContrasenias {
++ void validar(String contrasenia);
+}
+Interface dominio.Validador {
++ void validar(String contrasenia);
+}
+class dominio.ValidadorLargoMinimo {
++ void validar(String contrasenia)
 }
 class dominio.ValidadorContraseniasComunes {
 - BufferedReader archivoContrasenias
-+ void validar(String)
++ void validar(String contrasenia)
 }
 
 enum dominio.TipoDocumento{
@@ -64,31 +75,36 @@ DNI
 LC
 LE
 CI
+PASAPORTE
 }
-enum dominio.TipoMascota{
+enum mascota.TipoMascota{
 PERRO
 GATO
 }
 
-
-dominio.Persona <|-- dominio.Rescatista
-dominio.Caracteristica <|-- dominio.Castracion
-dominio.Caracteristica <|-- dominio.ColorSecundario
-dominio.Usuario <|-- dominio.UsuarioDuenioMascota
-dominio.Persona <|-- dominio.DuenioMascota
-dominio.Usuario <|-- dominio.UsuarioAdministrador
-dominio.Caracteristica <|-- dominio.ColorPrincipal
+dominio.ValidadorContrasenias <.. dominio.Usuario
+dominio.Validador "*" <-- dominio.ValidadorContrasenias: validadores
+dominio.Validador <|.. dominio.ValidadorLargoMinimo
+dominio.Validador <|.. dominio.ValidadorContraseniasComunes
+dominio.Persona <-- dominio.DuenioMascota: duenioMascota
 dominio.TipoDocumento <-- dominio.Persona: tipoDocumento
-dominio.Mascota "*" <-- dominio.DuenioMascota: mascotas
-dominio.TipoMascota <-- dominio.Mascota: tipoMascota
-dominio.Foto "*" <-- dominio.Mascota: fotos
-dominio.Caracteristica "*" <-- dominio.Mascota: caracteristicas
-dominio.Foto "*" <-- dominio.MascotaEncontrada: fotos
-dominio.Ubicacion <-- dominio.MascotaEncontrada: ubicacion
-dominio.Color <-- dominio.ColorPrincipal: color
-dominio.Color <-- dominio.ColorSecundario: color
-dominio.DuenioMascota <-- dominio.UsuarioDuenioMascota: duenioMascota
-dominio.ValidadorContraseniasComunes <.. dominio.Usuario
-dominio.MascotaEncontrada "*" <-- dominio.RepositorioMascotasEncontradas: mascotasEncontradas
+mascota.Mascota "*" <-- dominio.DuenioMascota: mascotas
+mascota.Caracteristica "*" <-- mascota.RepositorioCaracteristicas: caracteristicas
+mascota.TipoMascota <-- mascota.Mascota: tipoMascota
+mascota.Foto "*" <-- mascota.Mascota: fotos
+mascota.Caracteristica "*" <-- mascota.Mascota: caracteristicas
+mascota.Caracteristica <|-- mascota.Castracion
+mascota.Caracteristica <|-- mascota.ColorPrincipal
+mascota.Caracteristica <|-- mascota.ColorSecundario
+dominio.Usuario <|-- dominio.DuenioMascota
+dominio.Usuario <|-- dominio.Administrador
+dominio.Usuario <|-- dominio.Voluntario
+
+mascota.InformeMascotaEncontrada "*" <-- mascota.RepositorioInformesMascotasEncontradas: informesMascotasEncontradas
+mascota.Foto "*" <-- mascota.InformeMascotaEncontrada: fotos
+mascota.Ubicacion <-- mascota.InformeMascotaEncontrada: ubicacion
+dominio.Persona <-- mascota.InformeMascotaEncontrada: rescatista
+mascota.Color <-- mascota.ColorPrincipal: color
+mascota.Color <-- mascota.ColorSecundario: color
 
 @enduml

@@ -13,7 +13,7 @@ public abstract class Usuario {
   }
 
   private void validarContrasenia(String contrasenia){
-    ValidadorContraseniasComunes validador = new ValidadorContraseniasComunes();
-    validador.validar(contrasenia);
+    ValidadorContrasenias validadorContrasenias = new ValidadorContrasenias();
+    validadorContrasenias.validar(contrasenia);
   }
 }

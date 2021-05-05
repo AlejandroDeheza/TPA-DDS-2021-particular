@@ -1,16 +1,15 @@
 package dominio;
 
-import java.time.LocalDate;
 import java.util.List;
 
-public class DuenioMascota extends Persona{
+public class DuenioMascota extends Usuario{
 
-  List<Mascota> mascotas;
+  private Persona duenioMascota;
+  private List<Mascota> mascotas;
 
-  public DuenioMascota(String nombre, String apellido, LocalDate fechaNacimiento, TipoDocumento tipoDocumento,
-                       Long numeroDocumento, List<Mascota> mascotas, Integer telefono, String email){
-
-    super(nombre, apellido, fechaNacimiento, tipoDocumento, numeroDocumento, telefono, email);
+  public DuenioMascota(String usuario, String contrasenia, Persona duenioMascota, List<Mascota> mascotas){
+    super(usuario, contrasenia);
+    this.duenioMascota = duenioMascota;
     this.mascotas = mascotas;
   }
 }
